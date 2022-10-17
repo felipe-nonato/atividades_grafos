@@ -3,7 +3,6 @@ from meu_grafo_lista_adj import *
 from bibgrafo.grafo_errors import *
 from bibgrafo.aresta import Aresta
 
-
 class TestGrafo(unittest.TestCase):
 
     def setUp(self):
@@ -202,9 +201,7 @@ class TestGrafo(unittest.TestCase):
         self.assertNotEqual(self.g_p, self.g_p4)
 
     def test_vertices_nao_adjacentes(self):
-        self.assertEqual(self.g_p.vertices_nao_adjacentes(),
-                         {'J-E', 'J-P', 'J-M', 'J-T', 'J-Z', 'C-Z', 'E-P', 'E-M', 'E-T', 'E-Z', 'P-M', 'P-T', 'P-Z',
-                          'M-Z'})
+        self.assertEqual(self.g_p.vertices_nao_adjacentes(),{'J-E', 'J-P', 'J-M', 'J-T', 'J-Z', 'C-Z', 'E-P', 'E-M', 'E-T', 'E-Z', 'P-M', 'P-T', 'P-Z','M-Z'})
         self.assertEqual(self.g_d.vertices_nao_adjacentes(), {'A-C', 'A-D', 'B-C', 'B-D', 'C-D'})
         self.assertEqual(self.g_d2.vertices_nao_adjacentes(), {'A-B', 'A-C', 'A-D', 'B-C', 'B-D', 'C-D'})
         self.assertEqual(self.g_c.vertices_nao_adjacentes(), set())

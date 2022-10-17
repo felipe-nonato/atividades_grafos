@@ -1,5 +1,6 @@
+from sys import flags
 from bibgrafo.grafo_lista_adjacencia import GrafoListaAdjacencia
-from bibgrafo.grafo_exceptions import *
+from bibgrafo.grafo_errors import *
 
 
 class MeuGrafo(GrafoListaAdjacencia):
@@ -10,14 +11,29 @@ class MeuGrafo(GrafoListaAdjacencia):
         Onde X, Z e W são vértices no grafo que não tem uma aresta entre eles.
         :return: Uma lista com os pares de vértices não adjacentes
         '''
-        pass # Apague essa instrução e inicie seu código aqui
+
+        arestasReais = []
+        for i in self.arestas:
+            arestaCorrente = self.arestas[i]
+            verticesNasArestas = f'{arestaCorrente.v1}-{arestaCorrente.v2}'
+            arestasReais.append(verticesNasArestas)
+        verticesNaoAdjacentes = set()
+        for i in range(len(self.vertices)):
+            for j in range(i+1, len(self.vertices)):
+                verticesPossiveis = f'{self.vertices[i]}-{self.vertices[j]}'
+                if verticesPossiveis not in arestasReais and verticesPossiveis[::-1] not in arestasReais:
+                    verticesNaoAdjacentes.add(verticesPossiveis)
+        return verticesNaoAdjacentes
 
     def ha_laco(self):
         '''
         Verifica se existe algum laço no grafo.
         :return: Um valor booleano que indica se existe algum laço.
         '''
-        pass
+        for a in self.arestas:
+            if self.arestas[a].v1 == self.arestas[a].v2:
+                return True
+        return False
 
     def grau(self, V=''):
         '''
@@ -26,14 +42,30 @@ class MeuGrafo(GrafoListaAdjacencia):
         :return: Um valor inteiro que indica o grau do vértice
         :raises: VerticeInvalidoException se o vértice não existe no grafo
         '''
-        pass
+        if not self.existe_rotulo_vertice(V): raise VerticeInvalidoError
+
+        g = 0
+        for a in self.arestas:
+            if self.arestas[a].v1.rotulo == V:
+                g += 1
+            if self.arestas[a].v2.rotulo == V:
+                g += 1
+
+        return g
 
     def ha_paralelas(self):
         '''
         Verifica se há arestas paralelas no grafo
         :return: Um valor booleano que indica se existem arestas paralelas no grafo.
         '''
-        pass
+        temp = []
+        for a in self.arestas:
+            aresta = f'{self.arestas[a].v1}-{self.arestas[a].v2}'
+            if aresta in temp:
+                return True  
+            else:
+                temp.append(aresta)
+        return False
 
     def arestas_sobre_vertice(self, V):
         '''
@@ -42,14 +74,27 @@ class MeuGrafo(GrafoListaAdjacencia):
         :return: Uma lista os rótulos das arestas que incidem sobre o vértice
         :raises: VerticeInvalidoException se o vértice não existe no grafo
         '''
-        pass
+        if not self.existe_rotulo_vertice(V): raise VerticeInvalidoError
+        temp = set()
+
+        for a in self.arestas:
+            flagV1 = (V == self.arestas[a].v1.rotulo)
+            flagV2 = (V == self.arestas[a].v2.rotulo)
+            temp.add(a) if (flagV1 or flagV2) else {}
+
+        return temp
 
     def eh_completo(self):
         '''
         Verifica se o grafo é completo.
         :return: Um valor booleano que indica se o grafo é completo
         '''
-        pass
+        numArestasPossiveis=0
+        for i in range(len(self.vertices)):
+            for j in range(i+1, len(self.vertices)):
+                numArestasPossiveis+=1
 
-    def dijkstra_drone(self, vi, vf, carga:int, carga_max:int, pontos_recarga:list()):
-        pass
+        if(not MeuGrafo.ha_laco(self) and not MeuGrafo.ha_paralelas(self) and numArestasPossiveis==len(self.arestas)):
+            return True
+        else:
+            return False
