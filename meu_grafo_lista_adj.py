@@ -104,19 +104,20 @@ class MeuGrafo(GrafoListaAdjacencia):
 
     def dfs(self, V=''):
         # Verificando se existe vertice
-        V = Vertice(V)
         verticesVisitados = []
         grafoFinal = MeuGrafo()
-        vertice = V
-        ultimoNumero = int(re.findall(r'\d+', list(self.arestas)[-1])[0])+1
 
         for a in self.arestas:
-            if((a not in grafoFinal.arestas) and (self.arestas[a].v2 not in verticesVisitados)):
-                verticesVisitados.append(vertice)
-                vertice = self.arestas[a].v2
-                grafoFinal.adiciona_vertice(self.get_vertice(vertice))
-                grafoFinal.adiciona_aresta("a"+str(ultimoNumero),a.v1.rotulo,a.v2.rotulo)
-                self.dfs(self, vertice)
+            if((self.arestas[a].v1 not in grafoFinal.vertices) and (self.arestas[a].v2 not in grafoFinal.vertices)
+            (self.arestas[a].v2.rotulo not in verticesVisitados)):
+                verticesVisitados.append(V)
+                if not(grafoFinal.existe_vertice(self.arestas[a].v1)):
+                    grafoFinal.adiciona_vertice(self.arestas[a].v1.rotulo)
+                if not(grafoFinal.existe_vertice(self.arestas[a].v2)):
+                    grafoFinal.adiciona_vertice(self.arestas[a].v2.rotulo)
+                grafoFinal.adiciona_aresta(self.arestas[a].rotulo,self.arestas[a].v1.rotulo,self.arestas[a].v2.rotulo)
+                V = self.arestas[a].v2.rotulo
+            
         return grafoFinal
 
         
