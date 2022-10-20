@@ -1,7 +1,9 @@
 from sys import flags
+from bibgrafo.aresta import Aresta
+from bibgrafo.vertice import Vertice
 from bibgrafo.grafo_lista_adjacencia import GrafoListaAdjacencia
 from bibgrafo.grafo_errors import *
-
+import re
 
 class MeuGrafo(GrafoListaAdjacencia):
 
@@ -99,3 +101,24 @@ class MeuGrafo(GrafoListaAdjacencia):
             return True
         else:
             return False
+
+    def dfs(self, V=''):
+        # Verificando se existe vertice
+        V = Vertice(V)
+        verticesVisitados = []
+        grafoFinal = MeuGrafo()
+        vertice = V
+        ultimoNumero = int(re.findall(r'\d+', list(self.arestas)[-1])[0])+1
+
+        for a in self.arestas:
+            if((a not in grafoFinal.arestas) and (self.arestas[a].v2 not in verticesVisitados)):
+                verticesVisitados.append(vertice)
+                vertice = self.arestas[a].v2
+                grafoFinal.adiciona_vertice(self.get_vertice(vertice))
+                grafoFinal.adiciona_aresta("a"+str(ultimoNumero),a.v1.rotulo,a.v2.rotulo)
+                self.dfs(self, vertice)
+        return grafoFinal
+
+        
+    def bfs(self, V=''):
+        pass

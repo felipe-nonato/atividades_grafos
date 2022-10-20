@@ -1,6 +1,7 @@
 from bibgrafo.vertice import Vertice
 from bibgrafo.aresta import Aresta
-from bibgrafo.grafo_lista_adjacencia import GrafoListaAdjacencia
+from meu_grafo_lista_adj import MeuGrafo
+import re
 
 J = Vertice("J")
 C = Vertice("C")
@@ -19,13 +20,10 @@ a6 = Aresta("a6",C,M)
 a7 = Aresta("a7",C,T)
 a8 = Aresta("a8",M,T)
 a9 = Aresta("a9",T,Z)
-
-grafo = GrafoListaAdjacencia(
+a10 = Aresta("a10",T,Z)
+grafo = MeuGrafo(
     [J, C, E, P, M, T, Z],
-    {1:a1, 2:a2, 3:a3, 4:a4, 5:a5, 6:a6, 7:a7, 8:a8, 9:a9}
+    {"a1":a1, "a2":a2, "a3":a3, "a4":a4, "a5":a5, "a6":a6, "a7":a7, "a8":a8, "a9":a9}
 )
 
-temp = []
-for a in grafo.arestas:
-    aresta = f'{grafo.arestas[a].v1}-{grafo.arestas[a].v2}'
-    print("Identifiquei paralela") if aresta in temp else temp.append(aresta)
+print(grafo.dfs("J"))
