@@ -104,21 +104,26 @@ class MeuGrafo(GrafoListaAdjacencia):
 
     def dfs(self, V=''):
         # Verificando se existe vertice
+        vertice = Vertice(V)
         verticesVisitados = []
-        grafoFinal = MeuGrafo()
+        grafoFinal = MeuGrafo([],{})
+        arestas = list(self.arestas)
+        for i in range(len(self.arestas)):
+            for a in arestas:
+                if not grafoFinal.aresta_valida(self.arestas[a]):
+                    if not self.arestas[a].v2 in verticesVisitados:
 
-        for a in self.arestas:
-            if((self.arestas[a].v1 not in grafoFinal.vertices) and (self.arestas[a].v2 not in grafoFinal.vertices)
-            (self.arestas[a].v2.rotulo not in verticesVisitados)):
-                verticesVisitados.append(V)
-                if not(grafoFinal.existe_vertice(self.arestas[a].v1)):
-                    grafoFinal.adiciona_vertice(self.arestas[a].v1.rotulo)
-                if not(grafoFinal.existe_vertice(self.arestas[a].v2)):
-                    grafoFinal.adiciona_vertice(self.arestas[a].v2.rotulo)
-                grafoFinal.adiciona_aresta(self.arestas[a].rotulo,self.arestas[a].v1.rotulo,self.arestas[a].v2.rotulo)
-                V = self.arestas[a].v2.rotulo
-            
-        return grafoFinal
+                        verticesVisitados.append(vertice)
+                        if not self.arestas[a].v1 in grafoFinal.vertices:
+                            grafoFinal.adiciona_vertice(self.arestas[a].v1.rotulo)
+                        if not self.arestas[a].v2 in grafoFinal.vertices:
+                            grafoFinal.adiciona_vertice(self.arestas[a].v2.rotulo)
+                        if not self.arestas[a].rotulo in list(grafoFinal.arestas):
+                            grafoFinal.adiciona_aresta(self.arestas[a])
+                        vertice = self.arestas[a].v2
+            if(len(self.vertices)==len(grafoFinal.vertices)):
+                return grafoFinal
+        
 
         
     def bfs(self, V=''):
