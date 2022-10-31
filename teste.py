@@ -1,7 +1,6 @@
 from bibgrafo.vertice import Vertice
 from bibgrafo.aresta import Aresta
 from meu_grafo_lista_adj import MeuGrafo
-import re
 
 J = Vertice("J")
 C = Vertice("C")
@@ -26,10 +25,5 @@ grafo = MeuGrafo(
     {"a1":a1, "a2":a2, "a3":a3, "a4":a4, "a5":a5, "a6":a6, "a7":a7, "a8":a8, "a9":a9}
 )
 
-# print(list(grafo.arestas))
-# for a in list(grafo.arestas):
-#     print(grafo.arestas[a])  
 
 print(grafo.dfs("J"))
-# print(grafo.arestas['a1'])
-

@@ -1,5 +1,7 @@
 import unittest
 from meu_grafo_matriz_adj_nao_dir import *
+from bibgrafo.aresta import Aresta
+from bibgrafo.vertice import Vertice
 from bibgrafo.grafo_errors import *
 
 class TestGrafo(unittest.TestCase):

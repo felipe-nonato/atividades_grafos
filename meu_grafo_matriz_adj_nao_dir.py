@@ -1,5 +1,5 @@
 from bibgrafo.grafo_matriz_adj_nao_dir import GrafoMatrizAdjacenciaNaoDirecionado
-from bibgrafo.grafo_exceptions import *
+from bibgrafo.grafo_errors import *
 
 
 class MeuGrafo(GrafoMatrizAdjacenciaNaoDirecionado):
@@ -10,14 +10,18 @@ class MeuGrafo(GrafoMatrizAdjacenciaNaoDirecionado):
         Onde X, Z e W são vértices no grafo que não tem uma aresta entre eles.
         :return: Uma lista com os pares de vértices não adjacentes
         '''
-        pass
+
+        # pass
 
     def ha_laco(self):
         '''
         Verifica se existe algum laço no grafo.
         :return: Um valor booleano que indica se existe algum laço.
         '''
-        pass
+        for i in range(len(self.vertices)):
+            if len(self.matriz[i][i]) > 0:
+                return True
+        return False 
 
 
     def grau(self, V=''):
@@ -34,7 +38,11 @@ class MeuGrafo(GrafoMatrizAdjacenciaNaoDirecionado):
         Verifica se há arestas paralelas no grafo
         :return: Um valor booleano que indica se existem arestas paralelas no grafo.
         '''
-        pass
+        for i in range(len(self.vertices)):
+            for j in range(len(self.vertices)):
+                if len(self.matriz[j][i]) > 1:
+                    return True
+        return False 
 
     def arestas_sobre_vertice(self, V):
         '''
@@ -50,4 +58,14 @@ class MeuGrafo(GrafoMatrizAdjacenciaNaoDirecionado):
         Verifica se o grafo é completo.
         :return: Um valor booleano que indica se o grafo é completo
         '''
-        pass
+        if self.ha_laco() or self.ha_paralelas():
+            return False
+
+        for i in range(len(self.vertices)):
+            for j in range(i+1, len(self.vertices)):
+                if len(self.matriz[i][j]) == 0:
+                    return False
+                    
+        return True
+        
+        # pass

@@ -1,4 +1,3 @@
-from sys import flags
 from bibgrafo.aresta import Aresta
 from bibgrafo.vertice import Vertice
 from bibgrafo.grafo_lista_adjacencia import GrafoListaAdjacencia
@@ -121,8 +120,7 @@ class MeuGrafo(GrafoListaAdjacencia):
                         if not self.arestas[a].rotulo in list(grafoFinal.arestas):
                             grafoFinal.adiciona_aresta(self.arestas[a])
                         vertice = self.arestas[a].v2
-            if(len(self.vertices)==len(grafoFinal.vertices)):
-                return grafoFinal
+        return grafoFinal
         
 
         
