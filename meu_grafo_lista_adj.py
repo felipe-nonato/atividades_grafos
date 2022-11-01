@@ -2,7 +2,6 @@ from bibgrafo.aresta import Aresta
 from bibgrafo.vertice import Vertice
 from bibgrafo.grafo_lista_adjacencia import GrafoListaAdjacencia
 from bibgrafo.grafo_errors import *
-import re
 
 class MeuGrafo(GrafoListaAdjacencia):
 
@@ -101,28 +100,71 @@ class MeuGrafo(GrafoListaAdjacencia):
         else:
             return False
 
-    def dfs(self, V=''):
-        # Verificando se existe vertice
-        vertice = Vertice(V)
-        verticesVisitados = []
-        grafoFinal = MeuGrafo([],{})
-        arestas = list(self.arestas)
-        for i in range(len(self.arestas)):
-            for a in arestas:
-                if not grafoFinal.aresta_valida(self.arestas[a]):
-                    if not self.arestas[a].v2 in verticesVisitados:
+    def dfs(self, V=' '):
 
-                        verticesVisitados.append(vertice)
-                        if not self.arestas[a].v1 in grafoFinal.vertices:
-                            grafoFinal.adiciona_vertice(self.arestas[a].v1.rotulo)
-                        if not self.arestas[a].v2 in grafoFinal.vertices:
-                            grafoFinal.adiciona_vertice(self.arestas[a].v2.rotulo)
-                        if not self.arestas[a].rotulo in list(grafoFinal.arestas):
-                            grafoFinal.adiciona_aresta(self.arestas[a])
-                        vertice = self.arestas[a].v2
-        return grafoFinal
-        
+        arv_dfs = MeuGrafo()
+        arv_dfs.adiciona_vertice(V)
 
-        
-    def bfs(self, V=''):
-        pass
+        return self.dfs_aux_rec(V, arv_dfs)
+
+    def dfs_aux_rec(self, V, arv_dfs):
+
+        if len(self.vertices) == len(arv_dfs.vertices):
+            return arv_dfs
+
+        if not self.existe_rotulo_vertice(V):
+            raise VerticeInvalidoError
+
+        rotulo = self.arestas_sobre_vertice(V)
+        rotulos = list(rotulo)
+        rotulos.sort()
+
+        for a in rotulos:
+            if not arv_dfs.existe_rotulo_vertice(a):
+
+                if V == self.arestas[a].v1.rotulo:
+                    r = self.arestas[a].v2.rotulo
+                else:
+                    r = self.arestas[a].v1.rotulo
+
+                if not arv_dfs.existe_rotulo_vertice(r):
+                    arv_dfs.adiciona_vertice(r)
+                    arv_dfs.adiciona_aresta(self.arestas[a])
+
+                    arv_dfs = self.dfs_aux_rec(r, arv_dfs)
+
+        return arv_dfs
+
+
+
+    def bfs(self, V=' '):
+
+        arv_bfs = MeuGrafo()
+        arv_bfs.adiciona_vertice(V)
+        ordem = list()
+
+        return self.bfs_aux_rec(V, arv_bfs, ordem)
+
+    def bfs_aux_rec(self, V, arv_bfs, ordem):
+
+        if len(self.vertices) == len(arv_bfs.vertices):
+            print(ordem)
+            return arv_bfs
+
+        if not self.existe_rotulo_vertice(V):
+            raise VerticeInvalidoError
+
+        for a in self.arestas:
+            if self.arestas[a].v1.rotulo == V and self.arestas[a].v1.rotulo != self.arestas[a].v2.rotulo:
+                aux = self.arestas[a].v1.rotulo
+                prox = self.arestas[a].v2.rotulo
+
+                if arv_bfs.existe_rotulo_vertice(aux) and not arv_bfs.existe_rotulo_vertice(prox):
+                    arv_bfs.adiciona_vertice(prox)
+                    arv_bfs.adiciona_aresta(self.arestas[a])
+                    ordem.append("{}-{}".format(self.arestas[a].v1.rotulo, self.arestas[a].v2.rotulo))
+                    #self.bfs_aux_rec(prox, arv_bfs)
+
+        self.bfs_aux_rec(prox, arv_bfs, ordem)
+
+        return arv_bfs
