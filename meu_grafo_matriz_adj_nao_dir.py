@@ -10,6 +10,14 @@ class MeuGrafo(GrafoMatrizAdjacenciaNaoDirecionado):
         Onde X, Z e W são vértices no grafo que não tem uma aresta entre eles.
         :return: Uma lista com os pares de vértices não adjacentes
         '''
+        verticesNaoAdjacentes = set()
+        for i in range(len(self.vertices)):
+            for j in range(len(self.vertices)):
+                if(j>i and len(self.matriz[i][j])==0):
+                    verticesNaoAdjacentes.add(f"{self.vertices[i]}-{self.vertices[j]}")
+                
+        return verticesNaoAdjacentes
+        
 
         # pass
 
@@ -31,6 +39,7 @@ class MeuGrafo(GrafoMatrizAdjacenciaNaoDirecionado):
         :return: Um valor inteiro que indica o grau do vértice
         :raises: VerticeInvalidoException se o vértice não existe no grafo
         '''
+
         pass
 
     def ha_paralelas(self):
@@ -51,6 +60,12 @@ class MeuGrafo(GrafoMatrizAdjacenciaNaoDirecionado):
         :return: Uma lista os rótulos das arestas que incidem sobre o vértice
         :raises: VerticeInvalidoException se o vértice não existe no grafo
         '''
+        # for i in range(len(self.vertices)):
+        #     for j in range(len(self.vertices)):
+        #         if(self)
+                    
+        # return False 
+
         pass
 
     def eh_completo(self):

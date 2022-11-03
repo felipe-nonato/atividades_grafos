@@ -1,6 +1,6 @@
 from bibgrafo.vertice import Vertice
 from bibgrafo.aresta import Aresta
-from meu_grafo_lista_adj import MeuGrafo
+from meu_grafo_matriz_adj_nao_dir import MeuGrafo
 
 J = Vertice("J")
 C = Vertice("C")
@@ -20,10 +20,20 @@ a7 = Aresta("a7",C,T)
 a8 = Aresta("a8",M,T)
 a9 = Aresta("a9",T,Z)
 a10 = Aresta("a10",T,Z)
+
 grafo = MeuGrafo(
     [J, C, E, P, M, T, Z],
     {"a1":a1, "a2":a2, "a3":a3, "a4":a4, "a5":a5, "a6":a6, "a7":a7, "a8":a8, "a9":a9}
 )
 
+verticesNaoAdjacentes = set()
+for i in range(len(grafo.vertices)):
+    for j in range(len(grafo.vertices)):
+        if len(grafo.matriz[j][i]) == 1:
+            for k in grafo.matriz[j][i]:
+                print(k)
+                aresta = f"{k} - {k}"
+                verticesNaoAdjacentes.add(aresta)
+print(verticesNaoAdjacentes)
 
-print(grafo.dfs("J"))
+# print(grafo.dfs("J"))
