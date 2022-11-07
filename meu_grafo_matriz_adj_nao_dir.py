@@ -39,8 +39,21 @@ class MeuGrafo(GrafoMatrizAdjacenciaNaoDirecionado):
         :return: Um valor inteiro que indica o grau do vértice
         :raises: VerticeInvalidoException se o vértice não existe no grafo
         '''
+        if not self.existe_rotulo_vertice(V): raise VerticeInvalidoError
+        g = 0
+        arestasUnicas = []
+        for i in range(len(self.vertices)):
+            for j in range(len(self.vertices)):
+                if(self.matriz[i][j]!={}):
+                    for k in self.matriz[i][j]:
+                        if self.matriz[i][j][k].rotulo not in arestasUnicas:
+                            if self.matriz[i][j][k].v1.rotulo == V:
+                                g += 1
+                            if self.matriz[i][j][k].v2.rotulo == V:
+                                g += 1
+                            arestasUnicas.append(self.matriz[i][j][k].rotulo)
+        return g
 
-        pass
 
     def ha_paralelas(self):
         '''
@@ -60,14 +73,18 @@ class MeuGrafo(GrafoMatrizAdjacenciaNaoDirecionado):
         :return: Uma lista os rótulos das arestas que incidem sobre o vértice
         :raises: VerticeInvalidoException se o vértice não existe no grafo
         '''
-        # for i in range(len(self.vertices)):
-        #     for j in range(len(self.vertices)):
-        #         if(self)
-                    
-        # return False 
+        if not self.existe_rotulo_vertice(V): raise VerticeInvalidoError
+        temp = set()
 
-        pass
-
+        for i in range(len(self.vertices)):
+            for j in range(len(self.vertices)):
+                if(self.matriz[i][j]!={}):
+                    for k in self.matriz[i][j]:
+                        flagV1 = (V == self.matriz[i][j][k].v1.rotulo)
+                        flagV2 = (V == self.matriz[i][j][k].v2.rotulo)
+                        temp.add(k) if (flagV1 or flagV2) else {}
+        return temp
+        
     def eh_completo(self):
         '''
         Verifica se o grafo é completo.

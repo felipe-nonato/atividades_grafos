@@ -41,20 +41,17 @@ class MeuGrafo(GrafoListaAdjacencia):
         Provê o grau do vértice passado como parâmetro
         :param V: O rótulo do vértice a ser analisado
         :return: Um valor inteiro que indica o grau do vértice
-        :raises: VerticeInvalidoException se o vértice não existe no grafo
+        :raises: VerticeInvalidoError se o vértice não existe no grafo
         '''
+        if not self.existe_rotulo_vertice(V): raise VerticeInvalidoError
+
         g = 0
-        arestasUnicas = []
-        for i in range(len(self.vertices)):
-            for j in range(len(self.vertices)):
-                if(self.matriz[i][j]!={}):
-                    for k in self.matriz[i][j]:
-                        if self.matriz[i][j][k].rotulo not in arestasUnicas:
-                            if self.matriz[i][j][k].v1.rotulo == V:
-                                g += 1
-                            if self.matriz[i][j][k].v2.rotulo == V:
-                                g += 1
-                            arestasUnicas.append(self.matriz[i][j][k].rotulo)
+        for a in self.arestas:
+            if self.arestas[a].v1.rotulo == V:
+                g += 1
+            if self.arestas[a].v2.rotulo == V:
+                g += 1
+
         return g
 
     def ha_paralelas(self):
@@ -170,3 +167,38 @@ class MeuGrafo(GrafoListaAdjacencia):
         self.bfs_aux_rec(prox, arv_bfs, ordem)
 
         return arv_bfs
+
+g_p = MeuGrafo()
+g_p.adiciona_vertice("J")
+g_p.adiciona_vertice("C")
+g_p.adiciona_vertice("E")
+g_p.adiciona_vertice("P")
+g_p.adiciona_vertice("M")
+g_p.adiciona_vertice("T")
+g_p.adiciona_vertice("Z")
+g_p.adiciona_aresta('a1', 'J', 'C')
+g_p.adiciona_aresta('a2', 'C', 'E')
+g_p.adiciona_aresta('a3', 'C', 'E')
+g_p.adiciona_aresta('a4', 'P', 'C')
+g_p.adiciona_aresta('a5', 'P', 'C')
+g_p.adiciona_aresta('a6', 'T', 'C')
+g_p.adiciona_aresta('a7', 'M', 'C')
+g_p.adiciona_aresta('a8', 'M', 'T')
+g_p.adiciona_aresta('a9', 'T', 'Z')
+
+g_p2 = MeuGrafo()
+g_p2.adiciona_vertice("J")
+g_p2.adiciona_vertice("C")
+g_p2.adiciona_vertice("E")
+g_p2.adiciona_vertice("P")
+g_p2.adiciona_vertice("M")
+g_p2.adiciona_vertice("T")
+g_p2.adiciona_vertice("Z")
+g_p2.adiciona_aresta('a1', 'J', 'C')
+g_p2.adiciona_aresta('a2', 'C', 'E')
+g_p2.adiciona_aresta('a4', 'P', 'C')
+g_p2.adiciona_aresta('a6', 'T', 'C')
+g_p2.adiciona_aresta('a8', 'M', 'T')
+g_p2.adiciona_aresta('a9', 'T', 'Z')
+
+print(g_p.bfs("J"))
