@@ -1,5 +1,5 @@
 from bibgrafo.grafo_matriz_adj_dir import *
-from bibgrafo.grafo_exceptions import *
+from bibgrafo.grafo_errors import *
 
 class MeuGrafo(GrafoMatrizAdjacenciaDirecionado):
 
@@ -57,3 +57,9 @@ class MeuGrafo(GrafoMatrizAdjacenciaDirecionado):
         :return: Uma lista de listas que representa a matriz de alcançabilidade de Warshall associada ao grafo
         '''
         pass
+
+    def drone_dijkstra(self,vi,vf):
+        peso = {}
+        visitada = {}
+        predecessor = {}
+        print(self)
