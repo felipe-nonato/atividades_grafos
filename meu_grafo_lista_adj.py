@@ -5,6 +5,92 @@ from bibgrafo.grafo_errors import *
 
 class MeuGrafo(GrafoListaAdjacencia):
 
+    # auxiliares de prim
+
+    def reverse(self, V, a):
+        if a.v1.rotulo == V:
+            V = a.v2.rotulo
+            return V
+        else:
+            V = a.v1.rotulo
+            return V
+
+    # prim
+    def prim(self, v):
+        prim = MeuGrafo()
+        next = self.arestas[]
+        visitados = []
+        prim.adiciona_vertice(next)
+        while True:
+            if len(self.vertices) == len(prim.vertices):
+                break
+            sobre = self.arestas_sobre_vertice(next)
+            menor = float('inf')
+            ares_menor = ''
+            for a in sobre:
+                if self.arestas[a].peso <= menor:
+                    if not prim.existe_rotulo_vertice(self.reverse(next, self.arestas[a])):
+                        ares_menor = self.arestas[a]
+                        menor = self.arestas[a].peso
+            visitados.append(ares_menor)
+            if ares_menor.v1.rotulo == next:
+                next = ares_menor.v2.rotulo
+            else:
+                next = ares_menor.v1.rotulo
+            if not prim.existe_rotulo_vertice(next):
+                prim.adiciona_vertice(next)
+                prim.adiciona_aresta(ares_menor)
+
+        return prim
+
+    # Auxiliares kruskall
+    def sortAux(self):
+        sorted = []
+        menor = float('inf')
+        for a in self.arestas:
+            if self.arestas[a].peso <= menor and not a in sorted:
+                menor = self.arestas[a].peso
+        while len(sorted) < len(self.arestas):
+            for a in self.arestas:
+                if self.arestas[a].peso == menor:
+                    sorted.append(a)
+            menor += 1
+        return sorted
+
+    def bucket_sort(self):
+        lista_pesos = []
+        for a in self.arestas:
+            if not self.arestas[a].peso in lista_pesos:
+                lista_pesos.append(self.arestas[a].peso)
+        lista_pesos.sort()
+        bucket = list()
+        for i in range(len(lista_pesos)):
+            bucket.append([])
+            for a in self.arestas:
+                if self.arestas[a].peso == lista_pesos[i]:
+                    bucket[i].append(a)
+        return bucket
+
+    # kruskall
+    def kruskall(self):
+        arv_final = MeuGrafo()
+        row = self.bucket_sort()
+        for v in self.vertices:
+            arv_final.adiciona_vertice(v.rotulo)
+
+        for i in range(len(row)):
+            for a in row[i]:
+                aresta = self.arestas[a]
+                kruskall_dfs = arv_final.dfs(aresta.v1.rotulo)
+
+                if kruskall_dfs.existe_rotulo_vertice(aresta.v1.rotulo) and kruskall_dfs.existe_rotulo_vertice(
+                        aresta.v2.rotulo):
+                    pass
+                else:
+                    arv_final.adiciona_aresta(aresta)
+
+        return arv_final
+
     def vertices_nao_adjacentes(self):
         '''
         Provê um conjunto de vértices não adjacentes no grafo.

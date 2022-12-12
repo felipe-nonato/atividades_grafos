@@ -113,7 +113,16 @@ class TestGrafo(unittest.TestCase):
         self.g_c.adiciona_aresta('a4', 'E', 'C')
         self.g_c.adiciona_aresta('a5', 'P', 'C')
         self.g_c.adiciona_aresta('a6', 'P', 'E')
-
+        
+        self.g_cTestPrim = MeuGrafo()
+        self.g_cTestPrim.adiciona_vertice("J")
+        self.g_cTestPrim.adiciona_vertice("C")
+        self.g_cTestPrim.adiciona_vertice("E")
+        self.g_cTestPrim.adiciona_vertice("P")
+        self.g_cTestPrim.adiciona_aresta('a1', 'J', 'C')
+        self.g_cTestPrim.adiciona_aresta('a4', 'E', 'C')
+        self.g_cTestPrim.adiciona_aresta('a6', 'P', 'E')
+        
         self.g_c2 = MeuGrafo()
         self.g_c2.adiciona_vertice("Nina")
         self.g_c2.adiciona_vertice("Maria")
@@ -301,3 +310,8 @@ class TestGrafo(unittest.TestCase):
 
     def test_dfs(self):
         self.assertEqual(self.g_p.dfs("J"), self.g_pDfs)
+
+    def test_prim(self):
+        print(self.g_cTestPrim)
+        print(self.g_c.prim())
+        # self.assertEqual(self.g_c.prim(), self.g_cTestPrim)

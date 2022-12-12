@@ -5,6 +5,95 @@ from bibgrafo.grafo_errors import *
 
 class MeuGrafo(GrafoListaAdjacencia):
 
+    def arestaMenorPeso(self):
+        listaArestas = list(self.arestas)
+        menorPeso = listaArestas[0]
+
+        for a in self.arestas:
+            if (self.arestas[a].peso < self.arestas[menorPeso].peso):
+                menorPeso = a
+
+        return self.arestas[menorPeso].v1
+
+    def prim(self):
+        verticeInicial = self.arestaMenorPeso()
+
+        novoGrafo = MeuGrafo([verticeInicial])
+        listaDeVertices = [verticeInicial]
+
+        while len(self.vertices) != len(listaDeVertices):
+            vMenorPeso = float('inf')
+            verticeForaDaArvore = 0
+            arestaMenorPeso = 0
+
+            for a in self.arestas:
+                arestaAtual = self.arestas[a]
+                vertice1 = arestaAtual.v1
+                vertice2 = arestaAtual.v2
+
+                if vertice1 in listaDeVertices and vertice2 not in listaDeVertices:
+                    if arestaAtual.peso < vMenorPeso:
+                        vMenorPeso = arestaAtual.peso
+                        arestaMenorPeso = a
+                        verticeForaDaArvore = vertice2
+
+                elif vertice2 in listaDeVertices and vertice1 not in listaDeVertices:
+                    if arestaAtual.peso < vMenorPeso:
+                        vMenorPeso = arestaAtual.peso
+                        arestaMenorPeso = a
+                        verticeForaDaArvore = vertice1
+
+            if arestaMenorPeso == 0:
+                return False
+
+            arestaMenorPeso = self.arestas[arestaMenorPeso]
+            listaDeVertices.append(verticeForaDaArvore)
+            novoGrafo.adiciona_vertice(verticeForaDaArvore)
+
+            arestaF = arestaMenorPeso.rotulo
+            v1F = arestaMenorPeso.v1
+            v2F = arestaMenorPeso.v2
+            pesoF = arestaMenorPeso.peso
+
+            print()
+
+            novoGrafo.adiciona_aresta(Aresta(arestaF,v1F,v2F,pesoF))
+
+        return novoGrafo
+
+    def kruskall(self):
+        '''
+        Provê um novo grafo após o algoritmo de kruskal
+        :return: novo grafo com algotimo de kruskal aplicado
+        '''
+        arvore = MeuGrafo(self.vertices)
+        sortArestas = {}
+
+        for a in self.arestas:
+            sortArestas[self.arestas[a].rotulo] = self.arestas[a].peso
+
+        sortArestas = sorted(sortArestas, key=sortArestas.get)
+
+        cont = 0
+
+        while True:
+            if not arvore.caminho(self.arestas[sortArestas[cont]].v1, self.arestas[sortArestas[cont]].v2):
+                arvore.adiciona_aresta(self.arestas[sortArestas[cont]].rotulo, self.arestas[sortArestas[cont]].v1, self.arestas[sortArestas[cont]].v2,
+                                      self.arestas[sortArestas[cont]].peso)
+            cont += 1
+            if arvore.conexo():
+                break
+
+        return arvore
+
+    def caminho(grafo, v1, v2):
+        g = grafo.bfs(v1)
+
+        for i in g.arestas:
+            if g.arestas[i].v1 == v2 or g.arestas[i].v2 == v2:
+                return True
+        return False
+    # Codigos adjacentes
     def vertices_nao_adjacentes(self):
         '''
         Provê um conjunto de vértices não adjacentes no grafo.
@@ -140,7 +229,7 @@ class MeuGrafo(GrafoListaAdjacencia):
     def bfs(self, V=' '):
 
         arv_bfs = MeuGrafo()
-        arv_bfs.adiciona_vertice(V)
+        arv_bfs.adiciona_vertice(Vertice('J'))
         ordem = list()
 
         return self.bfs_aux_rec(V, arv_bfs, ordem)
@@ -148,7 +237,6 @@ class MeuGrafo(GrafoListaAdjacencia):
     def bfs_aux_rec(self, V, arv_bfs, ordem):
 
         if len(self.vertices) == len(arv_bfs.vertices):
-            print(ordem)
             return arv_bfs
 
         if not self.existe_rotulo_vertice(V):
@@ -168,37 +256,19 @@ class MeuGrafo(GrafoListaAdjacencia):
 
         return arv_bfs
 
-g_p = MeuGrafo()
-g_p.adiciona_vertice("J")
-g_p.adiciona_vertice("C")
-g_p.adiciona_vertice("E")
-g_p.adiciona_vertice("P")
-g_p.adiciona_vertice("M")
-g_p.adiciona_vertice("T")
-g_p.adiciona_vertice("Z")
-g_p.adiciona_aresta('a1', 'J', 'C')
-g_p.adiciona_aresta('a2', 'C', 'E')
-g_p.adiciona_aresta('a3', 'C', 'E')
-g_p.adiciona_aresta('a4', 'P', 'C')
-g_p.adiciona_aresta('a5', 'P', 'C')
-g_p.adiciona_aresta('a6', 'T', 'C')
-g_p.adiciona_aresta('a7', 'M', 'C')
-g_p.adiciona_aresta('a8', 'M', 'T')
-g_p.adiciona_aresta('a9', 'T', 'Z')
+# Grafo da Paraíba sem arestas paralelas
+gc = MeuGrafo()
+gc.adiciona_vertice("J")
+gc.adiciona_vertice("C")
+gc.adiciona_vertice("E")
+gc.adiciona_vertice("P")
+gc.adiciona_aresta('a1', 'J', 'C')
+gc.adiciona_aresta('a2', 'J', 'E')
+gc.adiciona_aresta('a3', 'J', 'P')
+gc.adiciona_aresta('a4', 'E', 'C')
+gc.adiciona_aresta('a5', 'P', 'C')
+gc.adiciona_aresta('a6', 'P', 'E')
 
-g_p2 = MeuGrafo()
-g_p2.adiciona_vertice("J")
-g_p2.adiciona_vertice("C")
-g_p2.adiciona_vertice("E")
-g_p2.adiciona_vertice("P")
-g_p2.adiciona_vertice("M")
-g_p2.adiciona_vertice("T")
-g_p2.adiciona_vertice("Z")
-g_p2.adiciona_aresta('a1', 'J', 'C')
-g_p2.adiciona_aresta('a2', 'C', 'E')
-g_p2.adiciona_aresta('a4', 'P', 'C')
-g_p2.adiciona_aresta('a6', 'T', 'C')
-g_p2.adiciona_aresta('a8', 'M', 'T')
-g_p2.adiciona_aresta('a9', 'T', 'Z')
 
-print(g_p.bfs("J"))
+# print(gc.prim())
+print(gc.kruskall())
