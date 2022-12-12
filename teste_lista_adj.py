@@ -78,8 +78,8 @@ class MeuGrafo(GrafoListaAdjacencia):
 
         while True:
             if not arvore.caminho(self.arestas[sortArestas[cont]].v1, self.arestas[sortArestas[cont]].v2):
-                arvore.adiciona_aresta(self.arestas[sortArestas[cont]].rotulo, self.arestas[sortArestas[cont]].v1, self.arestas[sortArestas[cont]].v2,
-                                      self.arestas[sortArestas[cont]].peso)
+                arvore.adiciona_aresta(Aresta(self.arestas[sortArestas[cont]].rotulo, self.arestas[sortArestas[cont]].v1, self.arestas[sortArestas[cont]].v2,
+                                      self.arestas[sortArestas[cont]].peso))
             cont += 1
             if arvore.conexo():
                 break
@@ -226,36 +226,78 @@ class MeuGrafo(GrafoListaAdjacencia):
 
 
 
-    def bfs(self, V=' '):
+    def bfs(self, V=''):
 
-        arv_bfs = MeuGrafo()
-        arv_bfs.adiciona_vertice(Vertice('J'))
-        ordem = list()
+        bfs = MeuGrafo(self.vertices[::])
 
-        return self.bfs_aux_rec(V, arv_bfs, ordem)
+        verticesVisitados = [V]
+        fila = [V]
 
-    def bfs_aux_rec(self, V, arv_bfs, ordem):
+        temVertice = False
 
-        if len(self.vertices) == len(arv_bfs.vertices):
-            return arv_bfs
+        for v in self.vertices:
+            if v == V:
+                temVertice = True
 
-        if not self.existe_rotulo_vertice(V):
-            raise VerticeInvalidoError
+        while (len(fila) != 0):
+            for a in self.arestas:
+                v1 = self.arestas[a].v1
+                v2 = self.arestas[a].v2
+                verticeAnalisado = fila[0]
 
-        for a in self.arestas:
-            if self.arestas[a].v1.rotulo == V and self.arestas[a].v1.rotulo != self.arestas[a].v2.rotulo:
-                aux = self.arestas[a].v1.rotulo
-                prox = self.arestas[a].v2.rotulo
+                if v1 == verticeAnalisado or v2 == verticeAnalisado:
+                    verticeAdjacente = v2 if verticeAnalisado == v1 else v1
 
-                if arv_bfs.existe_rotulo_vertice(aux) and not arv_bfs.existe_rotulo_vertice(prox):
-                    arv_bfs.adiciona_vertice(prox)
-                    arv_bfs.adiciona_aresta(self.arestas[a])
-                    ordem.append("{}-{}".format(self.arestas[a].v1.rotulo, self.arestas[a].v2.rotulo))
+                    if verticeAdjacente not in verticesVisitados:
+                        fila.append((verticeAdjacente))
+                        verticesVisitados.append(verticeAdjacente)
+                        bfs.adiciona_aresta(Aresta(a, verticeAnalisado, verticeAdjacente))
 
-        self.bfs_aux_rec(prox, arv_bfs, ordem)
+            fila.pop(0)
 
-        return arv_bfs
+        if not temVertice:
+            raise VerticeInvalidoError("O vértice", V, "não existe no grafo")
+        else:
+            return bfs
 
+    def bfs_aux(self, V=''):
+        bfs = MeuGrafo([V])
+
+        verticesVisitados = [V]
+        fila = [V]
+        listaBfs = [V]
+
+        while (len(fila) != 0):
+            for a in self.arestas:
+                v1 = self.arestas[a].v1
+                v2 = self.arestas[a].v2
+                verticeAnalisado = fila[0]
+
+                if v1 == verticeAnalisado or v2 == verticeAnalisado:
+                    verticeAdjacente = v2 if verticeAnalisado == v1 else v1
+
+                    if verticeAdjacente not in verticesVisitados:
+                        bfs.adiciona_vertice(verticeAdjacente)
+                        fila.append((verticeAdjacente))
+                        verticesVisitados.append(verticeAdjacente)
+                        bfs.adiciona_aresta(Aresta(a, verticeAnalisado, verticeAdjacente))
+                        listaBfs.append(verticeAdjacente)
+
+            fila.pop(0)
+        return listaBfs
+    def conexo(self):
+            '''
+            Verifica se o grafo é conexo
+            :return: Um valor booleano que indica se o grafo é ou não conexo
+            '''
+            grafo_bfs = self.bfs_aux(self.vertices[0])
+            tamanhoGrafoBfs = len(grafo_bfs)
+            tamanhoGrafoAnalisado = len(self.vertices)
+
+            if (tamanhoGrafoBfs != tamanhoGrafoAnalisado):
+                    return False
+            else:
+                    return True
 # Grafo da Paraíba sem arestas paralelas
 gc = MeuGrafo()
 gc.adiciona_vertice("J")
